@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.0/jars/libs/internal_impl-24.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="032a4b53def5e2ceedfc2e793b126c0163cfa1dd">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_42f24970bb04f2edc32c8cc8af34d5edcc123e1b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="fcc945a86ebcbf527429acb8216ec7dae2c06417">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/com.android.support-support-core-utils-24.2.0_74a2758ba8e1cbe9229586b6a25f8346d4c40d46.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.0/jars/libs/internal_impl-24.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="6e02e34594ebe9c0501ffda8dd48497f81b82977">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_f42bb72525110a22c22b5388c8b4f1c79a449c40.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.0/jars/libs/internal_impl-24.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="045be695d968dd707691cc55d23746dbf8cf569a">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_534677fa0c8db523aa1efa34da3113856c252ed9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="45f5eda279825ff470e3f51019d374d1ef61e000">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-24.2.0_c5ee1b0deb864754f636471b7c2a6fbf99d90687.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="d8bd2268fdcbfd52c76ade65d9900cd8def93a44">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/com.android.support-support-fragment-24.2.0_6b262b28cc8d57cc32db081de62e91055afa4428.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="c3c638be6e650b165ab9ae144857b64e82787fad">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-24.2.0_fe0869dce8b1b1ecd62d8a179b93b5dda999cbad.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="f9b41622897665678d31d78e57a361cb0cebcb0d">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/com.android.support-support-compat-24.2.0_39acea641472a47f363167949f1ac19c5b1e54bd.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="f21401f37a6e71ef389810290da55933ef7e9fff">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/instant-run-bootstrap_9097e63950af81c4e015dfc3d74c20223dc71364.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="6eb9107eb34d2fe2b020662b7fbbec991dcba846">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/com.android.support-support-media-compat-24.2.0_767c9709345f850a647fb0da92e4724524297704.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="c84e216d9bf618464d6b9564d71d9a656433e7c4">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/com.android.support-support-core-ui-24.2.0_a6e300fe19ea4b8c39349324a61b20eb725d9a22.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.0/jars/libs/internal_impl-24.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="60d7b23621d31e6f42f4f76f16af467e57a20cda">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_53898b5d0c1ff17dc4a6a4eb5ac249168e9d51b0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/24.2.0/support-annotations-24.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="6be858a75633b1f0a2d24cad740db57775cb6871">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/support-annotations-24.2.0_333a756be12b652ee0a36d66bfabcefba2fc49a9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.0/jars/libs/internal_impl-24.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="771b3cc0e597b54da25f8086ba73180c59c6bc71">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_f67b925dd4ae0af864281b1a6bf4f9424f7afacf.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="beac40bcc8a320a896dd15f5109cfcaea5e1e0e3">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/com.android.support-support-vector-drawable-24.2.0_48ee83a10cb432eade5ac9128ac183fa40131add.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="f3ee23ef25c9a8fe3d40246d0b7097267963a612">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/com.android.support-animated-vector-drawable-24.2.0_1248598170f2111780f03b8f9b04497d45f0c9f5.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="bbee8846462792b3a8e1db079a3c071c5bd709e3">
+        <dex dex="/Users/Guolei/Desktop/develop/github/RxRetrofitSample/app/build/intermediates/pre-dexed/debug/instant-run_a9cfdd1fd3c8ee388624dc3cc8b4a285a3493fe5.jar" />
+    </item>
+
+</items>
