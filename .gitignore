@@ -8,6 +8,8 @@
 # Files for the Dalvik VM
 *.dex
 
+.gradle
+
 # Java class files
 *.class
 
