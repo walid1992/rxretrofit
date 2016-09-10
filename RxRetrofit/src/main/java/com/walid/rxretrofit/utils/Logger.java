@@ -10,7 +10,7 @@ import com.walid.rxretrofit.BuildConfig;
  */
 public class Logger {
 
-    private static final String TAG = "shuidihuzhu";
+    private static final String TAG = "rxjava-retrofit";
 
     public static void d(String msg) {
         if (BuildConfig.DEBUG) {

@@ -59,7 +59,7 @@ public class HttpSubscriber<T> extends Subscriber<T> implements IHttpCancelListe
         } else if (e instanceof UnknownHostException) {
             callbackErr(ICodeVerify.UNKNOWN_HOST_EXCEPTION_CODE, "连接不到服务器~");
         } else {
-            callbackErr(ICodeVerify.UNKNOWN_EXCEPTION_CODE, "服务器正在开小灶,请稍后再再试~");
+            callbackErr(ICodeVerify.UNKNOWN_EXCEPTION_CODE, e.getMessage());
         }
     }
 
