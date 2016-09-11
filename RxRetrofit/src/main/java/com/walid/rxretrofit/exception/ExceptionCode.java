@@ -13,5 +13,6 @@ public class ExceptionCode {
     public static final int PERMISSION_ERROR = -102;
     public static final int HTTP_EXCEPTION = -103;
     public static final int SOCKET_TIMEOUT_EXCEPTION = -103;
+    public static final int CONNECT_EXCEPTION = -104;
 
 }

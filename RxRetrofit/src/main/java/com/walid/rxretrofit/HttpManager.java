@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -79,6 +80,9 @@ public class HttpManager {
         if (writeTimeoutSeconds > 0) {
             builder.writeTimeout(writeTimeoutSeconds, TimeUnit.SECONDS);
         }
+
+        // Log信息拦截器
+        builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
 
         ArrayList<Interceptor> interceptors = params.getInterceptors();
         if (interceptors != null && interceptors.size() > 0) {

@@ -14,6 +14,7 @@ import com.walid.rxretrofit.utils.RxRetrogitLog;
 
 import org.json.JSONException;
 
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
 import retrofit2.adapter.rxjava.HttpException;
@@ -102,6 +103,8 @@ public class HttpSubscriber<T> extends Subscriber<T> implements IHttpCancelListe
         } else if (e instanceof ServerResultException) {
             ServerResultException apiException = (ServerResultException) e;
             callError(apiException.getCode(), apiException.getMessage());
+        } else if (e instanceof ConnectException) {
+            callError(ExceptionCode.CONNECT_EXCEPTION, "连接服务器失败~");
         } else {
             callError(ExceptionCode.UNKNOWN_ERROR, "服务器正在开小灶,请稍后再试~");
         }
