@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.google.gson.GsonBuilder;
 import com.walid.rxretrofit.bean.RetrofitParams;
-import com.walid.rxretrofit.exception.ApiException;
+import com.walid.rxretrofit.exception.ServerResultException;
 import com.walid.rxretrofit.interfaces.ICodeVerify;
 import com.walid.rxretrofit.interfaces.IHttpCallback;
 import com.walid.rxretrofit.interfaces.IHttpResult;
@@ -93,11 +93,15 @@ public class HttpManager {
         return retrofit.create(type);
     }
 
-    public <T, Result extends IHttpResult<T>> void toSubscribe(Context context, Observable<Result> observable, final IHttpCallback<T> listener) {
-        toSubscribe(context, observable, listener, true);
+    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, Context context, IHttpCallback<T> listener) {
+        return toSubscribe(observable, new HttpSubscriber<>(context, listener));
     }
 
-    public <T, Result extends IHttpResult<T>> void toSubscribe(Context context, Observable<Result> observable, final IHttpCallback<T> listener, boolean showErrorTip) {
+    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, Context context, IHttpCallback<T> listener, boolean isShowToast) {
+        return toSubscribe(observable, new HttpSubscriber<>(context, listener, isShowToast));
+    }
+
+    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, HttpSubscriber<T> httpSubscriber) {
         Observable<T> observableNew = observable.map(new Func1<Result, T>() {
             @Override
             public T call(Result result) {
@@ -107,7 +111,7 @@ public class HttpManager {
                 Logger.d(result.toString());
                 int code = result.getCode();
                 if (!codeVerify.checkValid(result.getCode())) {
-                    throw new ApiException(code, codeVerify.formatCodeMessage(code, result.getMsg()));
+                    throw new ServerResultException(code, codeVerify.formatCodeMessage(code, result.getMsg()));
                 }
                 return result.getData();
             }
@@ -115,7 +119,8 @@ public class HttpManager {
         observableNew.subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new HttpSubscriber<T>(context, listener, showErrorTip));
+                .subscribe(httpSubscriber);
+        return httpSubscriber;
     }
 
 }

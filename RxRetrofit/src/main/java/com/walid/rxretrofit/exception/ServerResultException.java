@@ -5,11 +5,11 @@ package com.walid.rxretrofit.exception;
  * Data     : 2016-08-18  15:58
  * Describe : rock
  */
-public class ApiException extends RuntimeException {
+public class ServerResultException extends RuntimeException {
 
     private int code;
 
-    public ApiException(int code, String message) {
+    public ServerResultException(int code, String message) {
         super(message);
         this.code = code;
     }
