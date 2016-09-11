@@ -8,7 +8,7 @@ import com.walid.rxretrofit.exception.ServerResultException;
 import com.walid.rxretrofit.interfaces.ICodeVerify;
 import com.walid.rxretrofit.interfaces.IHttpCallback;
 import com.walid.rxretrofit.interfaces.IHttpResult;
-import com.walid.rxretrofit.utils.Logger;
+import com.walid.rxretrofit.utils.RxRetrogitLog;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +39,7 @@ public class HttpManager {
         RxJavaPlugins.getInstance().registerErrorHandler(new RxJavaErrorHandler() {
             @Override
             public void handleError(Throwable e) {
-                Logger.e("RxJavaPlugins Error = " + e);
+                RxRetrogitLog.e("RxJavaPlugins Error = " + e);
             }
         });
     }
@@ -108,7 +108,7 @@ public class HttpManager {
                 if (result == null) {
                     throw new IllegalStateException("数据为空~");
                 }
-                Logger.d(result.toString());
+                RxRetrogitLog.d(result.toString());
                 int code = result.getCode();
                 if (!codeVerify.checkValid(result.getCode())) {
                     throw new ServerResultException(code, codeVerify.formatCodeMessage(code, result.getMsg()));

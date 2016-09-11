@@ -10,7 +10,7 @@ import com.walid.rxretrofit.exception.ExceptionCode;
 import com.walid.rxretrofit.exception.ServerResultException;
 import com.walid.rxretrofit.interfaces.IHttpCallback;
 import com.walid.rxretrofit.interfaces.IHttpCancelListener;
-import com.walid.rxretrofit.utils.Logger;
+import com.walid.rxretrofit.utils.RxRetrogitLog;
 
 import org.json.JSONException;
 
@@ -106,7 +106,7 @@ public class HttpSubscriber<T> extends Subscriber<T> implements IHttpCancelListe
             callError(ExceptionCode.UNKNOWN_ERROR, "服务器正在开小灶,请稍后再试~");
         }
 
-        Logger.e(e.getMessage());
+        RxRetrogitLog.e(e.getMessage());
 
     }
 
