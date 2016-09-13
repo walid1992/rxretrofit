@@ -3,6 +3,8 @@ package com.walid.rxretrofit.bean;
 import java.util.ArrayList;
 
 import okhttp3.Interceptor;
+import retrofit2.CallAdapter;
+import retrofit2.Converter;
 
 /**
  * Author   : walid
@@ -15,6 +17,8 @@ public class RetrofitParams {
     private int readTimeoutSeconds;
     private int writeTimeoutSeconds;
     private ArrayList<Interceptor> interceptors;
+    private Converter.Factory converterFactory;
+    private CallAdapter.Factory callAdapterFactor;
 
     public RetrofitParams() {
     }
@@ -55,4 +59,21 @@ public class RetrofitParams {
         return this;
     }
 
+    public Converter.Factory getConverterFactory() {
+        return converterFactory;
+    }
+
+    public RetrofitParams setConverterFactory(Converter.Factory converterFactory) {
+        this.converterFactory = converterFactory;
+        return this;
+    }
+
+    public CallAdapter.Factory getCallAdapterFactor() {
+        return callAdapterFactor;
+    }
+
+    public RetrofitParams setCallAdapterFactor(CallAdapter.Factory callAdapterFactor) {
+        this.callAdapterFactor = callAdapterFactor;
+        return this;
+    }
 }

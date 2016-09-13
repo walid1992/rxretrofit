@@ -45,7 +45,7 @@ publish {
     userOrg = 'walid1992'//bintray.com用户名
     groupId = 'com.walid'//jcenter上的路径
     artifactId = 'rxjava-retrofit'//项目名称
-    publishVersion = '1.0.4'//版本号
+    publishVersion = '1.0.5'//版本号
     desc = ' Rxjava and Retrofit '//描述
     website = 'https://github.com/walid1992/RxRetrofitSample'//网站
 }

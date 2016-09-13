@@ -16,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.CallAdapter;
+import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -55,9 +57,11 @@ public class HttpManager {
 
     public void create(String baseUrl, ICodeVerify codeVerify, RetrofitParams params) {
         this.codeVerify = codeVerify;
+        Converter.Factory converterFactory = params.getConverterFactory();
+        CallAdapter.Factory callAdapterFactory = params.getCallAdapterFactor();
         retrofit = new Retrofit.Builder().baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().create()))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(converterFactory != null ? converterFactory : GsonConverterFactory.create(new GsonBuilder().create()))
+                .addCallAdapterFactory(callAdapterFactory != null ? callAdapterFactory : RxJavaCallAdapterFactory.create())
                 .client(createClient(params))
                 .build();
     }
