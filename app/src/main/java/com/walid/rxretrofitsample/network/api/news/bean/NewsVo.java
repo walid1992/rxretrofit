@@ -1,7 +1,5 @@
 package com.walid.rxretrofitsample.network.api.news.bean;
 
-import com.zqxq.hulk.bean.server.annotation.ApiModelProperty;
-
 /**
  * Author   : walid
  * Data     : 2016-10-10  13:44
@@ -10,34 +8,24 @@ import com.zqxq.hulk.bean.server.annotation.ApiModelProperty;
 
 public class NewsVo {
 
-    @ApiModelProperty(value = "是否为最新版本")
     private boolean latest;
 
-    @ApiModelProperty(value = "客户端当前版本")
     private String clientVersion;
 
-    @ApiModelProperty(value = "最新版本")
     private String latestVersion;
 
-    @ApiModelProperty(value = "主要")
     private String major;
 
-    @ApiModelProperty(value = "次要的")
     private String minor;
 
-    @ApiModelProperty(value = "修正")
     private String revision;
 
-    @ApiModelProperty(value = "是否强制更新")
     private boolean mandatory;
 
-    @ApiModelProperty(value = "发布时间")
     private long releaseDate;
 
-    @ApiModelProperty(value = "android下载版本")
     private String androidUrl;
 
-    @ApiModelProperty(value = "更新日志")
     private String changeLog;
 
     public boolean isLatest() {

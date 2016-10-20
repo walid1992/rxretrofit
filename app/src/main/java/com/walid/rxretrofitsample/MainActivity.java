@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.walid.rxretrofit.R;
 import com.walid.rxretrofit.interfaces.SimpleHttpCallback;
 import com.walid.rxretrofitsample.network.api.news.NewsService;
 
