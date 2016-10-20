@@ -29,7 +29,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.10'
     //retrofit
@@ -44,8 +44,8 @@ dependencies {
 publish {
     userOrg = 'walid1992'//bintray.com用户名
     groupId = 'com.walid'//jcenter上的路径
-    artifactId = 'rxjava-retrofit'//项目名称
+    artifactId = 'rxretrofit'//项目名称
     publishVersion = '1.0.5'//版本号
     desc = ' Rxjava and Retrofit '//描述
-    website = 'https://github.com/walid1992/RxRetrofitSample'//网站
+    website = 'https://github.com/walid1992/RxRetrofit'//网站
 }
