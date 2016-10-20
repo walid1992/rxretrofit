@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
                 tvContent.setText("Datas = \n" + insuranceVos.toString());
             }
         });
-    }gst
-     gst
+    }
 
 }
