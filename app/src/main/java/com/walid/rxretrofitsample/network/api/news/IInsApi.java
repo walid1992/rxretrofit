@@ -13,10 +13,10 @@ import rx.Observable;
  * Describe :
  */
 
-interface INewsApi {
+interface IInsApi {
 
     // news
-    @GET("/4/news/latest")
-    Observable<HttpResult<Object>> latest(@Query("platform") String platform);
+    @GET("/api/ins/list")
+    Observable<HttpResult<Object>> list(@Query("platform") String platform);
 
 }

@@ -10,12 +10,12 @@ import com.walid.rxretrofitsample.network.SeaApiUtils;
  * Describe :
  */
 
-public class NewsService {
+public class InsService {
 
-    private static final INewsApi NEWS_API = HttpManager.getInstance().getApiService(INewsApi.class);
+    private static final IInsApi INS_API = HttpManager.getInstance().getApiService(IInsApi.class);
 
     public static void latest(final IHttpCallback<Object> listener) {
-        SeaApiUtils.toSubscribe(NEWS_API.latest("ANDROID"), listener);
+        SeaApiUtils.toSubscribe(INS_API.list("ANDROID"), listener);
     }
 
 }
