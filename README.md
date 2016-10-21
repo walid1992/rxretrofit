@@ -181,14 +181,11 @@ public class HttpManager {
 
 重要处理：
 
-1. create 
-
+1. create :
 rxretrofit库的初始化，建议在Application中进行初始化，通过参数可以清晰的得知，传入了baseurl、code校验与params，从而设置OkHttpClient。
-
-2. getApiService
-
+2. getApiService :
 获取api的实例对象。
-3. toSubscribe
+3. toSubscribe :
 订阅网络请求，调用此方法进行网络请求，在网络请求发起时创建了HttpSubscriber对象，进行rxjava的事件订阅，进行统一处理。
 
 ### HttpSubscriber
@@ -318,11 +315,11 @@ public class HttpSubscriber<T> extends Subscriber<T> implements IHttpCancelListe
 
 重要处理：
 
-1. onNext
+1. onNext :
 请求成功回调callback。
-2. onError
+2. onError :
 请求失败进行统一处理。
-3. onCancel
+3. onCancel :
 对网络请求进行取消订阅，可以在activity destroy中进行取消操作。
 
 # rxretrofit 框架使用
