@@ -2,7 +2,7 @@ package com.walid.rxretrofitsample.network.api.news;
 
 import com.walid.rxretrofit.HttpManager;
 import com.walid.rxretrofit.interfaces.IHttpCallback;
-import com.walid.rxretrofitsample.network.SeaApiUtils;
+import com.walid.rxretrofitsample.network.ApiUtils;
 import com.walid.rxretrofitsample.network.api.news.bean.InsuranceVo;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class InsService {
     private static final IInsApi INS_API = HttpManager.getInstance().getApiService(IInsApi.class);
 
     public static void list(final IHttpCallback<List<InsuranceVo>> listener) {
-        SeaApiUtils.toSubscribe(INS_API.list("ANDROID"), listener);
+        ApiUtils.toSubscribe(INS_API.list("ANDROID"), listener);
     }
 
 }

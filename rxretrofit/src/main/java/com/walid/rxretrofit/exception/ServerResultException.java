@@ -3,7 +3,7 @@ package com.walid.rxretrofit.exception;
 /**
  * Author   : walid
  * Data     : 2016-08-18  15:58
- * Describe : rock
+ * Describe : server 返回异常
  */
 public class ServerResultException extends RuntimeException {
 

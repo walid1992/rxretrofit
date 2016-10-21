@@ -3,12 +3,13 @@ package com.walid.rxretrofit.utils;
 import android.util.Log;
 
 /**
- * Created by walid on 16/8/10.
- * log 日志
+ * Author   : walid
+ * Data     : 2016-10-21  12:45
+ * Describe :
  */
 public class RxRetrogitLog {
 
-    private static final String TAG = "rxjava-retrofit";
+    private static final String TAG = "rxretrofit";
     public static boolean DEBUG;
 
     public static void d(String msg) {

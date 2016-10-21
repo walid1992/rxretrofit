@@ -3,7 +3,7 @@ package com.walid.rxretrofit.exception;
 /**
  * Author   : walid
  * Data     : 2016-09-11  16:29
- * Describe :
+ * Describe : 网络异常代码
  */
 
 public class ExceptionCode {

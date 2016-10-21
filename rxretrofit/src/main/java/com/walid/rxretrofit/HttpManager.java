@@ -31,7 +31,7 @@ import rx.schedulers.Schedulers;
 /**
  * Author   : walid
  * Data     : 2016-08-18  15:58
- * Describe : rock
+ * Describe : http 管理类
  */
 public class HttpManager {
 

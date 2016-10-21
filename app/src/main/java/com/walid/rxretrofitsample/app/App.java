@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.walid.rxretrofit.HttpManager;
 import com.walid.rxretrofit.bean.RetrofitParams;
 import com.walid.rxretrofitsample.network.ApiConstants;
-import com.walid.rxretrofitsample.network.SeaCodeVerify;
+import com.walid.rxretrofitsample.network.CodeVerify;
 import com.walid.rxretrofitsample.network.interceptor.ParamsInterceptor;
 import com.walid.rxretrofit.utils.RxRetrogitLog;
 
@@ -39,7 +39,7 @@ public class App extends Application {
         params.setReadTimeoutSeconds(10);
         params.setWriteTimeoutSeconds(10);
         params.setInterceptors(interceptors);
-        HttpManager.getInstance().create(ApiConstants.URL, new SeaCodeVerify(), params);
+        HttpManager.getInstance().create(ApiConstants.URL, new CodeVerify(), params);
     }
 
 }

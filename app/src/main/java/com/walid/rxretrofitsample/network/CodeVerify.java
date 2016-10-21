@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
  * Data     : 2016-09-01  18:53
  * Describe :
  */
-public class SeaCodeVerify implements ICodeVerify {
+public class CodeVerify implements ICodeVerify {
 
     @IntDef({Code.SUCCESS})
     @Retention(RetentionPolicy.SOURCE)

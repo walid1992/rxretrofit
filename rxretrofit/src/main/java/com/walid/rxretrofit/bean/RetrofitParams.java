@@ -9,7 +9,7 @@ import retrofit2.Converter;
 /**
  * Author   : walid
  * Data     : 2016-08-18  16:00
- * Describe : rock
+ * Describe : 配置参数
  */
 public class RetrofitParams {
 
