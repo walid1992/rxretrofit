@@ -43,43 +43,33 @@ dependencies {
 1. RetrofitParams ： 
 
 配置参数，包括超时时间、转换器、拦截器等
-
 2. ExceptionCode ：
 
 http异常代码
-
 3. ServerResultException：
 
 自定义server异常
-
 4. ICodeVerify :
 
 codehi合法校验接口，用于服务器code异常校验
-
 5. IHttpCallback :
 
 rxjava 订阅callback
-
 6. IHttpCancelListener :
 
 http 请求取消接口
-
 7. IHttpResult :
 
 http数据返回接口，统一规范
-
 8. SimpleHttpCallback :
 
 IHttpResult的实现类
-
 9. RxRetrogitLog :
 
 log 日志工具类
-
 10. HttpManager :
 
 http网络请求管理
-
 11. HttpSubscriber :
 
 http 订阅处理
@@ -209,9 +199,7 @@ rxretrofit库的初始化，建议在Application中进行初始化，通过参�
 2. getApiService
 
 获取api的实例对象。
-
 3. toSubscribe
-
 订阅网络请求，调用此方法进行网络请求，在网络请求发起时创建了HttpSubscriber对象，进行rxjava的事件订阅，进行统一处理。
 
 ### HttpSubscriber
