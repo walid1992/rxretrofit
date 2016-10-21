@@ -41,38 +41,27 @@ dependencies {
 **简单介绍下文件的作用，这里没有优先级，直接从上至下 ：**
 
 1. RetrofitParams ： 
-
-配置参数，包括超时时间、转换器、拦截器等
+    配置参数，包括超时时间、转换器、拦截器等
 2. ExceptionCode ：
-
-http异常代码
+    http异常代码
 3. ServerResultException：
-
 自定义server异常
 4. ICodeVerify :
-
-codehi合法校验接口，用于服务器code异常校验
+    codehi合法校验接口，用于服务器code异常校验
 5. IHttpCallback :
-
-rxjava 订阅callback
+    rxjava 订阅callback
 6. IHttpCancelListener :
-
-http 请求取消接口
+    http 请求取消接口
 7. IHttpResult :
-
-http数据返回接口，统一规范
+    http数据返回接口，统一规范
 8. SimpleHttpCallback :
-
-IHttpResult的实现类
+    IHttpResult的实现类
 9. RxRetrogitLog :
-
-log 日志工具类
+    log 日志工具类
 10. HttpManager :
-
-http网络请求管理
+    http网络请求管理
 11. HttpSubscriber :
-
-http 订阅处理
+    http 订阅处理
 
 根据目录结构大家对项目应该有了一个整体的认识。
 
