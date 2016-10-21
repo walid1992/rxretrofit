@@ -46,21 +46,21 @@ dependencies {
 http异常代码
 3. ServerResultException：
 自定义server异常
-4. ICodeVerify
+4. ICodeVerify :
 codehi合法校验接口，用于服务器code异常校验
-5. IHttpCallback
+5. IHttpCallback :
 rxjava 订阅callback
-6. IHttpCancelListener
+6. IHttpCancelListener :
 http 请求取消接口
-7. IHttpResult
+7. IHttpResult :
 http数据返回接口，统一规范
-8. SimpleHttpCallback
+8. SimpleHttpCallback :
 IHttpResult的实现类
-9. RxRetrogitLog
+9. RxRetrogitLog :
 log 日志工具类
-10. HttpManager
+10. HttpManager :
 http网络请求管理
-11. HttpSubscriber
+11. HttpSubscriber :
 http 订阅处理
 
 根据目录结构大家对项目应该有了一个整体的认识。
@@ -407,3 +407,4 @@ gradle  ：
 # 结语
 
 RxRetrofit的使用就简单介绍到这里，希望大家多多提意见，草民好加以完善，谢谢~
+
