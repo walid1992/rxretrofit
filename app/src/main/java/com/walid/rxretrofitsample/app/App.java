@@ -8,7 +8,6 @@ import com.walid.rxretrofit.bean.RetrofitParams;
 import com.walid.rxretrofitsample.network.ApiConstants;
 import com.walid.rxretrofitsample.network.CodeVerify;
 import com.walid.rxretrofitsample.network.interceptor.ParamsInterceptor;
-import com.walid.rxretrofit.utils.RxRetrogitLog;
 
 import java.util.ArrayList;
 
@@ -28,7 +27,6 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instalce = this;
-        RxRetrogitLog.DEBUG = true;
         ArrayList<Interceptor> interceptors = new ArrayList<>();
         interceptors.add(new ParamsInterceptor());
         RetrofitParams params = new RetrofitParams();
@@ -39,6 +37,7 @@ public class App extends Application {
         params.setReadTimeoutSeconds(10);
         params.setWriteTimeoutSeconds(10);
         params.setInterceptors(interceptors);
+        params.setDebug(true);
         HttpManager.getInstance().create(ApiConstants.URL, new CodeVerify(), params);
     }
 

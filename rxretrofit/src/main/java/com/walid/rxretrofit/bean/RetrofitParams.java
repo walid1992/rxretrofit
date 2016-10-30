@@ -19,6 +19,7 @@ public class RetrofitParams {
     private ArrayList<Interceptor> interceptors;
     private Converter.Factory converterFactory;
     private CallAdapter.Factory callAdapterFactor;
+    private boolean debug;
 
     public RetrofitParams() {
     }
@@ -75,5 +76,13 @@ public class RetrofitParams {
     public RetrofitParams setCallAdapterFactor(CallAdapter.Factory callAdapterFactor) {
         this.callAdapterFactor = callAdapterFactor;
         return this;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 }

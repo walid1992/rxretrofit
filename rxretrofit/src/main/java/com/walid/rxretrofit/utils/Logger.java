@@ -7,10 +7,10 @@ import android.util.Log;
  * Data     : 2016-10-21  12:45
  * Describe :
  */
-public class RxRetrogitLog {
+public class Logger {
 
     private static final String TAG = "rxretrofit";
-    public static boolean DEBUG;
+    public static boolean DEBUG = true;
 
     public static void d(String msg) {
         if (DEBUG) {
@@ -18,9 +18,9 @@ public class RxRetrogitLog {
         }
     }
 
-    public static void d(Object obj) {
+    public static void d(String msg, Throwable tr) {
         if (DEBUG) {
-            Log.d(TAG, buildMessage(String.valueOf(obj)));
+            Log.d(TAG, buildMessage(msg), tr);
         }
     }
 
@@ -30,9 +30,21 @@ public class RxRetrogitLog {
         }
     }
 
+    public static void v(String msg, Throwable tr) {
+        if (DEBUG) {
+            Log.v(TAG, buildMessage(msg), tr);
+        }
+    }
+
     public static void i(String msg) {
         if (DEBUG) {
             Log.i(TAG, buildMessage(msg));
+        }
+    }
+
+    public static void i(String msg, Throwable tr) {
+        if (DEBUG) {
+            Log.i(TAG, buildMessage(msg), tr);
         }
     }
 
@@ -42,9 +54,21 @@ public class RxRetrogitLog {
         }
     }
 
+    public static void w(String msg, Throwable tr) {
+        if (DEBUG) {
+            Log.w(TAG, buildMessage(msg), tr);
+        }
+    }
+
     public static void e(String msg) {
         if (DEBUG) {
             Log.e(TAG, buildMessage(msg));
+        }
+    }
+
+    public static void e(String msg, Throwable tr) {
+        if (DEBUG) {
+            Log.e(TAG, buildMessage(msg), tr);
         }
     }
 

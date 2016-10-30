@@ -8,7 +8,7 @@ import com.walid.rxretrofit.exception.ServerResultException;
 import com.walid.rxretrofit.interfaces.ICodeVerify;
 import com.walid.rxretrofit.interfaces.IHttpCallback;
 import com.walid.rxretrofit.interfaces.IHttpResult;
-import com.walid.rxretrofit.utils.RxRetrogitLog;
+import com.walid.rxretrofit.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -37,12 +37,13 @@ public class HttpManager {
 
     private Retrofit retrofit;
     private ICodeVerify codeVerify;
+    private RetrofitParams params;
 
     private HttpManager() {
         RxJavaPlugins.getInstance().registerErrorHandler(new RxJavaErrorHandler() {
             @Override
             public void handleError(Throwable e) {
-                RxRetrogitLog.e("RxJavaPlugins Error = " + e);
+                Logger.e("RxJavaPlugins Error = " + e);
             }
         });
     }
@@ -56,7 +57,6 @@ public class HttpManager {
     }
 
     public void create(String baseUrl, ICodeVerify codeVerify, RetrofitParams params) {
-        this.codeVerify = codeVerify;
         Converter.Factory converterFactory = params.getConverterFactory();
         CallAdapter.Factory callAdapterFactory = params.getCallAdapterFactor();
         retrofit = new Retrofit.Builder().baseUrl(baseUrl)
@@ -64,6 +64,9 @@ public class HttpManager {
                 .addCallAdapterFactory(callAdapterFactory != null ? callAdapterFactory : RxJavaCallAdapterFactory.create())
                 .client(createClient(params))
                 .build();
+        Logger.DEBUG = params.isDebug();
+        this.codeVerify = codeVerify;
+        this.params = params;
     }
 
     private OkHttpClient createClient(RetrofitParams params) {
@@ -86,7 +89,9 @@ public class HttpManager {
         }
 
         // Log信息拦截器
-        builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+        if (params.isDebug()) {
+            builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+        }
 
         ArrayList<Interceptor> interceptors = params.getInterceptors();
         if (interceptors != null && interceptors.size() > 0) {
@@ -116,7 +121,6 @@ public class HttpManager {
                 if (result == null) {
                     throw new IllegalStateException("数据为空~");
                 }
-                RxRetrogitLog.d(result.toString());
                 int code = result.getCode();
                 if (!codeVerify.checkValid(result.getCode())) {
                     throw new ServerResultException(code, codeVerify.formatCodeMessage(code, result.getMsg()));
@@ -131,4 +135,7 @@ public class HttpManager {
         return httpSubscriber;
     }
 
+    public RetrofitParams getParams() {
+        return params;
+    }
 }
