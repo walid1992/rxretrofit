@@ -340,8 +340,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        // LOG 日志开关
-        RxRetrogitLog.DEBUG = true;
         RetrofitParams params = new RetrofitParams();
         // 拦截器设置
         ArrayList<Interceptor> interceptors = new ArrayList<>();
@@ -356,6 +354,8 @@ public class App extends Application {
         params.setReadTimeoutSeconds(10);
         // 写超时时间
         params.setWriteTimeoutSeconds(10);
+        // 设置debug模式
+        params.setDebug(true);
         // 创建httpClient
         HttpManager.getInstance().create(ApiConstants.URL, new SeaCodeVerify(), params);
     }
