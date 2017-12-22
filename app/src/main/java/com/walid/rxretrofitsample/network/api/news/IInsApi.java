@@ -16,7 +16,7 @@ import retrofit2.http.Query;
  * Describe :
  */
 
-interface IInsApi {
+public interface IInsApi {
 
     // news
     @GET("/api/ins/list")

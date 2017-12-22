@@ -314,7 +314,41 @@ public class HttpSubscriber<T> implements IHttpCancelListener, Observer<T> {
 gradle  ：
 
 ```
- compile 'com.walid:rxretrofit:0.1.0'
+ compile 'com.walid:rxretrofit:0.3.1'
+```
+
+# 使用说明
+
+## 1. 注册单例 HttpManager（建议在 Application 中注册）
+
+```
+        ArrayList<Interceptor> interceptors = new ArrayList<>();
+        interceptors.add(new ParamsInterceptor());
+        RetrofitParams params = new RetrofitParams();
+        // data 转换器
+        GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss");
+        params.setConverterFactory(GsonConverterFactory.create(builder.create()));
+        params.setConnectTimeoutSeconds(10);
+        params.setReadTimeoutSeconds(10);
+        params.setWriteTimeoutSeconds(10);
+        params.setInterceptors(interceptors);
+        params.setDebug(true);
+        HttpManager.getInstance().create(ApiConstants.URL, new CodeVerify(), params);
+```
+
+## 2. 配置Code校验类与HttpResult 
+
+配置规则，详见代码示例~
+
+## 3. 发起网络请求
+
+```
+        HttpManager.getInstance().toSubscribe(HttpManager.getInstance().getApiService(IInsApi.class).list("ANDROID"), App.instalce, new SimpleHttpCallback<List<InsuranceVo>>() {
+            @Override
+            public void onNext(List<InsuranceVo> insuranceVos) {
+                tvContent.setText("Datas = \n" + insuranceVos.toString());
+            }
+        }, false);
 ```
 
 # 结语
