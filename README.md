@@ -18,7 +18,7 @@
 
 ## 技术概要
 
-rxretrofit库采用了rxjava + retrofit 2.0 进行整合封装， [retrofit2.0](http://blog.csdn.net/walid1992/article/details/52421399) 与 [rxjava](http://blog.csdn.net/walid1992/article/details/52426040) 在之前文章中都有所介绍，相信大家也都会有所了解，rxjava 与 retrofit的思想就不和大家进行过多的解读了，长话短说，我们开始吧~
+rxretrofit库采用了rxjava 2.0+ + retrofit 2.0 进行整合封装， [retrofit2.0](http://blog.csdn.net/walid1992/article/details/52421399) 与 [rxjava](http://blog.csdn.net/walid1992/article/details/52426040) 在之前文章中都有所介绍，相信大家也都会有所了解，rxjava 与 retrofit的思想就不和大家进行过多的解读了，长话短说，我们开始吧~
 
 
 ## 依赖module
@@ -26,15 +26,14 @@ rxretrofit库采用了rxjava + retrofit 2.0 进行整合封装， [retrofit2.0](
 ```
 dependencies { 
     // ... 省略部分依赖
-    // rxjava 相关库
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.10'
-    //retrofit 相关库
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    compile 'com.google.code.gson:gson:2.7'
+    // rxjava
+    api 'io.reactivex.rxjava2:rxjava:2.1.4'
+    api 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    api 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+    api 'com.squareup.okhttp3:okhttp:3.8.1'
+    api 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+    api 'com.squareup.retrofit2:converter-gson:2.2.0'
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
 }
 ```
 
@@ -87,12 +86,6 @@ public class HttpManager {
     private ICodeVerify codeVerify;
 
     private HttpManager() {
-        RxJavaPlugins.getInstance().registerErrorHandler(new RxJavaErrorHandler() {
-            @Override
-            public void handleError(Throwable e) {
-                RxRetrogitLog.e("RxJavaPlugins Error = " + e);
-            }
-        });
     }
 
     public static HttpManager getInstance() {
@@ -109,7 +102,7 @@ public class HttpManager {
         CallAdapter.Factory callAdapterFactory = params.getCallAdapterFactor();
         retrofit = new Retrofit.Builder().baseUrl(baseUrl)
                 .addConverterFactory(converterFactory != null ? converterFactory : GsonConverterFactory.create(new GsonBuilder().create()))
-                .addCallAdapterFactory(callAdapterFactory != null ? callAdapterFactory : RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(callAdapterFactory != null ? callAdapterFactory : RxJava2CallAdapterFactory.create())
                 .client(createClient(params))
                 .build();
     }
@@ -158,9 +151,9 @@ public class HttpManager {
     }
 
     public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, HttpSubscriber<T> httpSubscriber) {
-        Observable<T> observableNew = observable.map(new Func1<Result, T>() {
+        Observable<T> observableNew = observable.map(new Function<Result, T>() {
             @Override
-            public T call(Result result) {
+            public T apply(Result result) throws Exception {
                 if (result == null) {
                     throw new IllegalStateException("数据为空~");
                 }
@@ -181,6 +174,7 @@ public class HttpManager {
 
 }
 
+
 ```
 
 重要处理：
@@ -200,7 +194,7 @@ rxretrofit库的初始化，建议在Application中进行初始化，通过参�
  * Data     : 2016-08-18  15:59
  * Describe : http 观察者(订阅者)
  */
-public class HttpSubscriber<T> extends Subscriber<T> implements IHttpCancelListener {
+public class HttpSubscriber<T> implements IHttpCancelListener, Observer<T> {
 
     private static final String TAG = "HttpSubscriber";
 
@@ -226,17 +220,6 @@ public class HttpSubscriber<T> extends Subscriber<T> implements IHttpCancelListe
         this.context = context;
         this.httpCallback = httpCallback;
         this.showError = showError;
-    }
-
-    // 订阅开始时调用
-    @Override
-    public void onStart() {
-    }
-
-    // 加载成功
-    @Override
-    public void onCompleted() {
-        Log.d(TAG, "onCompleted");
     }
 
     // 对错误进行统一处理
@@ -288,6 +271,21 @@ public class HttpSubscriber<T> extends Subscriber<T> implements IHttpCancelListe
 
     }
 
+    @Override
+    public void onSubscribe(Disposable d) {
+        Log.d(TAG, "onSubscribe");
+    }
+
+    @Override
+    public void onCancel() {
+        Log.d(TAG, "onCancel");
+    }
+
+    @Override
+    public void onComplete() {
+        Log.d(TAG, "onCompleted");
+    }
+
     private void callError(int code, String message) {
         if (showError) {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
@@ -304,95 +302,6 @@ public class HttpSubscriber<T> extends Subscriber<T> implements IHttpCancelListe
             return;
         }
         httpCallback.onNext(t);
-    }
-
-    // 取消ProgressDialog的时候，取消对observable的订阅，同时也取消了http请求
-    @Override
-    public void onCancel() {
-        if (!this.isUnsubscribed()) {
-            this.unsubscribe();
-        }
-    }
-
-}
-```
-
-重要处理：
-
-1. onNext :
-请求成功回调callback。
-2. onError :
-请求失败进行统一处理。
-3. onCancel :
-对网络请求进行取消订阅，可以在activity destroy中进行取消操作。
-
-# rxretrofit 框架使用
-
-前面说了那么多，有的人要吐槽了，bb这么多没有用的，说了半天我还不知道如何使用呢？xx个逼的，草民只是想让大家不仅仅是一个使用者，更想让大家多多的懂得其中的原理，好吧！代码我介绍的也不够完整，在此做个鬼脸，草民惭愧了，下面和大家分享重头戏，使用篇~
-
-## 初始化
-
-建议初始化在Application中~
-
-```
-public class App extends Application {
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        RetrofitParams params = new RetrofitParams();
-        // 拦截器设置
-        ArrayList<Interceptor> interceptors = new ArrayList<>();
-        interceptors.add(new ParamsInterceptor());
-        params.setInterceptors(interceptors);
-        // data 转换器
-        GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss");
-        params.setConverterFactory(GsonConverterFactory.create(builder.create()));
-        // 连接超时时间
-        params.setConnectTimeoutSeconds(10);
-        // 读取超时时间
-        params.setReadTimeoutSeconds(10);
-        // 写超时时间
-        params.setWriteTimeoutSeconds(10);
-        // 设置debug模式
-        params.setDebug(true);
-        // 创建httpClient
-        HttpManager.getInstance().create(ApiConstants.URL, new SeaCodeVerify(), params);
-    }
-
-}
-```
-
-## api 声明
-
-```
-public interface IInsApi {
-    // 险种 list
-    @GET("/api/ins/list")
-    Observable<HttpResult<List<InsuranceVo>>> list(@Query("platform") String platform);
-}
-```
-
-## 请求调用
-
-```
-public class MainActivity extends AppCompatActivity {
-
-    TextView tvContent;
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        tvContent = (TextView) findViewById(R.id.tv_content);
-        HttpManager httpManager = HttpManager.getInstance();
-        // 发起请求
-        httpManager.toSubscribe(httpManager.getApiService(IInsApi.class).list("ANDROID"), this, new SimpleHttpCallback<List<InsuranceVo>>() {
-            @Override
-            public void onNext(List<InsuranceVo> insuranceVos) {
-                tvContent.setText("Datas = \n" + insuranceVos.toString());
-            }
-        }, true);   
     }
 
 }
