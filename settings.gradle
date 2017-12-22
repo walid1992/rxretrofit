@@ -1,1 +1,1 @@
-include ':app', ':rxretrofit'
+include ':app', ':lib'
