@@ -17,15 +17,16 @@ import org.json.JSONException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
-import retrofit2.adapter.rxjava.HttpException;
-import rx.Subscriber;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import retrofit2.HttpException;
 
 /**
  * Author   : walid
  * Data     : 2016-08-18  15:59
  * Describe : http 观察者(订阅者)
  */
-public class HttpSubscriber<T> extends Subscriber<T> implements IHttpCancelListener {
+public class HttpSubscriber<T> implements IHttpCancelListener, Observer<T> {
 
     private static final String TAG = "HttpSubscriber";
 
@@ -51,17 +52,6 @@ public class HttpSubscriber<T> extends Subscriber<T> implements IHttpCancelListe
         this.context = context;
         this.httpCallback = httpCallback;
         this.showError = showError;
-    }
-
-    // 订阅开始时调用
-    @Override
-    public void onStart() {
-    }
-
-    // 加载成功
-    @Override
-    public void onCompleted() {
-        Log.d(TAG, "onCompleted");
     }
 
     // 对错误进行统一处理
@@ -113,6 +103,21 @@ public class HttpSubscriber<T> extends Subscriber<T> implements IHttpCancelListe
 
     }
 
+    @Override
+    public void onSubscribe(Disposable d) {
+        Log.d(TAG, "onSubscribe");
+    }
+
+    @Override
+    public void onCancel() {
+        Log.d(TAG, "onCancel");
+    }
+
+    @Override
+    public void onComplete() {
+        Log.d(TAG, "onCompleted");
+    }
+
     private void callError(int code, String message) {
         if (showError) {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
@@ -129,14 +134,6 @@ public class HttpSubscriber<T> extends Subscriber<T> implements IHttpCancelListe
             return;
         }
         httpCallback.onNext(t);
-    }
-
-    // 取消ProgressDialog的时候，取消对observable的订阅，同时也取消了http请求
-    @Override
-    public void onCancel() {
-        if (!this.isUnsubscribed()) {
-            this.unsubscribe();
-        }
     }
 
 }

@@ -8,25 +8,22 @@ import com.walid.rxretrofit.exception.ServerResultException;
 import com.walid.rxretrofit.interfaces.ICodeVerify;
 import com.walid.rxretrofit.interfaces.IHttpCallback;
 import com.walid.rxretrofit.interfaces.IHttpResult;
-import com.walid.rxretrofit.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.plugins.RxJavaErrorHandler;
-import rx.plugins.RxJavaPlugins;
-import rx.schedulers.Schedulers;
 
 /**
  * Author   : walid
@@ -40,12 +37,6 @@ public class HttpManager {
     private RetrofitParams params;
 
     private HttpManager() {
-        RxJavaPlugins.getInstance().registerErrorHandler(new RxJavaErrorHandler() {
-            @Override
-            public void handleError(Throwable e) {
-                Logger.e("RxJavaPlugins Error = " + e);
-            }
-        });
     }
 
     public static HttpManager getInstance() {
@@ -61,10 +52,9 @@ public class HttpManager {
         CallAdapter.Factory callAdapterFactory = params.getCallAdapterFactor();
         retrofit = new Retrofit.Builder().baseUrl(baseUrl)
                 .addConverterFactory(converterFactory != null ? converterFactory : GsonConverterFactory.create(new GsonBuilder().create()))
-                .addCallAdapterFactory(callAdapterFactory != null ? callAdapterFactory : RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(callAdapterFactory != null ? callAdapterFactory : RxJava2CallAdapterFactory.create())
                 .client(createClient(params))
                 .build();
-        Logger.DEBUG = params.isDebug();
         this.codeVerify = codeVerify;
         this.params = params;
     }
@@ -115,9 +105,9 @@ public class HttpManager {
     }
 
     public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, HttpSubscriber<T> httpSubscriber) {
-        Observable<T> observableNew = observable.map(new Func1<Result, T>() {
+        Observable<T> observableNew = observable.map(new Function<Result, T>() {
             @Override
-            public T call(Result result) {
+            public T apply(Result result) throws Exception {
                 if (result == null) {
                     throw new IllegalStateException("数据为空~");
                 }

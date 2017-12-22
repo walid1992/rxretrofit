@@ -2,10 +2,10 @@ package com.walid.rxretrofitsample.network;
 
 import com.walid.rxretrofit.HttpManager;
 import com.walid.rxretrofit.HttpSubscriber;
-import com.walid.rxretrofitsample.app.App;
 import com.walid.rxretrofit.interfaces.IHttpCallback;
+import com.walid.rxretrofitsample.app.App;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Author   : walid
