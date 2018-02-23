@@ -47,6 +47,10 @@ public class HttpManager {
         static HttpManager instance = new HttpManager();
     }
 
+    public static HttpManager newInstance() {
+        return new HttpManager();
+    }
+
     public void create(String baseUrl, ICodeVerify codeVerify, RetrofitParams params) {
         Converter.Factory converterFactory = params.getConverterFactory();
         CallAdapter.Factory callAdapterFactory = params.getCallAdapterFactor();
@@ -114,6 +118,9 @@ public class HttpManager {
                 int code = result.getCode();
                 if (!codeVerify.checkValid(result.getCode())) {
                     throw new ServerResultException(code, codeVerify.formatCodeMessage(code, result.getMsg()));
+                }
+                if (result.getData() == null) {
+                    return (T) "";
                 }
                 return result.getData();
             }

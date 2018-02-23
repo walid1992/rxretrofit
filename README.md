@@ -314,7 +314,7 @@ public class HttpSubscriber<T> implements IHttpCancelListener, Observer<T> {
 gradle  ：
 
 ```
- compile 'com.walid:rxretrofit:0.3.1'
+ compile 'com.walid:rxretrofit:0.3.2'
 ```
 
 # 使用说明
