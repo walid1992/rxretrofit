@@ -10,6 +10,7 @@ import com.walid.rxretrofit.exception.ExceptionCode;
 import com.walid.rxretrofit.exception.ServerResultException;
 import com.walid.rxretrofit.interfaces.IHttpCallback;
 import com.walid.rxretrofit.interfaces.IHttpCancelListener;
+import com.walid.rxretrofit.interfaces.IHttpResult;
 import com.walid.rxretrofit.utils.RxRetrogitLog;
 
 import org.json.JSONException;
@@ -26,7 +27,7 @@ import retrofit2.HttpException;
  * Data     : 2016-08-18  15:59
  * Describe : http 观察者(订阅者)
  */
-public class HttpSubscriber<T> implements IHttpCancelListener, Observer<T> {
+public class HttpSubscriber<T> implements IHttpCancelListener, Observer<IHttpResult<T>> {
 
     private static final String TAG = "HttpSubscriber";
 
@@ -129,11 +130,9 @@ public class HttpSubscriber<T> implements IHttpCancelListener, Observer<T> {
 
     // 将onNext方法中的返回结果交给Activity或Fragment自己处理
     @Override
-    public void onNext(T t) {
-        if (httpCallback == null) {
-            return;
-        }
-        httpCallback.onNext(t);
+    public void onNext(IHttpResult<T> tiHttpResult) {
+        if (httpCallback == null) return;
+        httpCallback.onNext(tiHttpResult.getData());
     }
 
 }
