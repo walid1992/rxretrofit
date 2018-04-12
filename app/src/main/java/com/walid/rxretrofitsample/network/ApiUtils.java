@@ -1,6 +1,5 @@
 package com.walid.rxretrofitsample.network;
 
-import com.walid.rxretrofit.HttpManager;
 import com.walid.rxretrofit.HttpSubscriber;
 import com.walid.rxretrofit.interfaces.IHttpCallback;
 import com.walid.rxretrofitsample.app.App;
@@ -19,7 +18,7 @@ public class ApiUtils {
     }
 
     public static <T> HttpSubscriber<T> toSubscribe(Observable<HttpResult<T>> observable, final IHttpCallback<T> listener, boolean showToast) {
-        return HttpManager.getInstance().toSubscribe(observable, App.instalce, listener, showToast);
+        return App.httpManager.toSubscribe(observable, App.instance, listener, showToast);
     }
 
 }

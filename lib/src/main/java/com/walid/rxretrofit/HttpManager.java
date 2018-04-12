@@ -1,6 +1,5 @@
 package com.walid.rxretrofit;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.google.gson.GsonBuilder;
@@ -10,18 +9,11 @@ import com.walid.rxretrofit.interfaces.ICodeVerify;
 import com.walid.rxretrofit.interfaces.IHttpCallback;
 import com.walid.rxretrofit.interfaces.IHttpResult;
 
-import java.security.GeneralSecurityException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -47,22 +39,7 @@ public class HttpManager {
     private ICodeVerify codeVerify;
     private RetrofitParams params;
 
-    private HttpManager() {
-    }
-
-    public static HttpManager getInstance() {
-        return HttpManager.SingletonHolder.instance;
-    }
-
-    private static class SingletonHolder {
-        static HttpManager instance = new HttpManager();
-    }
-
-    public static HttpManager newInstance() {
-        return new HttpManager();
-    }
-
-    public void create(String baseUrl, ICodeVerify codeVerify, RetrofitParams params) {
+    HttpManager(String baseUrl, ICodeVerify codeVerify, RetrofitParams params) {
         Converter.Factory converterFactory = params.getConverterFactory();
         CallAdapter.Factory callAdapterFactory = params.getCallAdapterFactor();
         retrofit = new Retrofit.Builder().baseUrl(baseUrl)
@@ -105,36 +82,15 @@ public class HttpManager {
             }
         }
 
-        X509TrustManager trustManager = new X509TrustManager() {
-            @SuppressLint("TrustAllX509TrustManager")
-            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                //do nothing，接受任意客户端证书
-            }
-
-            @SuppressLint("TrustAllX509TrustManager")
-            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                //do nothing，接受任意服务端证书
-            }
-
-            public X509Certificate[] getAcceptedIssuers() {
-                return new java.security.cert.X509Certificate[]{};
-            }
-        };
-        SSLSocketFactory sslSocketFactory;
-        try {
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, new TrustManager[]{trustManager}, null);
-            sslSocketFactory = sslContext.getSocketFactory();
-        } catch (GeneralSecurityException e) {
-            throw new RuntimeException(e);
+        SSLSocketFactory sslSocketFactory = params.getSslSocketFactory();
+        if (sslSocketFactory != null) {
+            builder.sslSocketFactory(params.getSslSocketFactory());
         }
-        builder.sslSocketFactory(sslSocketFactory, trustManager);
-        builder.hostnameVerifier(new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        });
+
+        HostnameVerifier hostnameVerifier = params.getHostnameVerifier();
+        if (hostnameVerifier != null) {
+            builder.hostnameVerifier(params.getHostnameVerifier());
+        }
 
         return builder.build();
     }

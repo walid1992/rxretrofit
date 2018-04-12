@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.google.gson.GsonBuilder;
 import com.walid.rxretrofit.HttpManager;
+import com.walid.rxretrofit.HttpManagerBuilder;
 import com.walid.rxretrofit.bean.RetrofitParams;
 import com.walid.rxretrofitsample.network.ApiConstants;
 import com.walid.rxretrofitsample.network.CodeVerify;
@@ -21,12 +22,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class App extends Application {
 
-    public static Application instalce;
+    public static Application instance;
+    public static HttpManager httpManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        instalce = this;
+        instance = this;
         ArrayList<Interceptor> interceptors = new ArrayList<>();
         interceptors.add(new ParamsInterceptor());
         RetrofitParams params = new RetrofitParams();
@@ -38,7 +40,11 @@ public class App extends Application {
         params.setWriteTimeoutSeconds(10);
         params.setInterceptors(interceptors);
         params.setDebug(true);
-        HttpManager.getInstance().create(ApiConstants.URL, new CodeVerify(), params);
+        httpManager = HttpManagerBuilder.create()
+                .setBaseUrl(ApiConstants.URL)
+                .setCodeVerify(new CodeVerify())
+                .setParams(params)
+                .build();
     }
 
 }

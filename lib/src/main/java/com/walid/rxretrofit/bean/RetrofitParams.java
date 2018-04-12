@@ -2,6 +2,9 @@ package com.walid.rxretrofit.bean;
 
 import java.util.ArrayList;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSocketFactory;
+
 import okhttp3.Interceptor;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
@@ -19,6 +22,8 @@ public class RetrofitParams {
     private ArrayList<Interceptor> interceptors;
     private Converter.Factory converterFactory;
     private CallAdapter.Factory callAdapterFactor;
+    private SSLSocketFactory sslSocketFactory;
+    private HostnameVerifier hostnameVerifier;
     private boolean debug;
 
     public RetrofitParams() {
@@ -76,6 +81,22 @@ public class RetrofitParams {
     public RetrofitParams setCallAdapterFactor(CallAdapter.Factory callAdapterFactor) {
         this.callAdapterFactor = callAdapterFactor;
         return this;
+    }
+
+    public SSLSocketFactory getSslSocketFactory() {
+        return sslSocketFactory;
+    }
+
+    public void setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
+        this.sslSocketFactory = sslSocketFactory;
+    }
+
+    public HostnameVerifier getHostnameVerifier() {
+        return hostnameVerifier;
+    }
+
+    public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
+        this.hostnameVerifier = hostnameVerifier;
     }
 
     public boolean isDebug() {
