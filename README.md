@@ -333,7 +333,11 @@ gradle  ：
         params.setWriteTimeoutSeconds(10);
         params.setInterceptors(interceptors);
         params.setDebug(true);
-        HttpManager.getInstance().create(ApiConstants.URL, new CodeVerify(), params);
+        httpManager = HttpManagerBuilder.create()
+                .setBaseUrl(ApiConstants.URL)
+                .setCodeVerify(new CodeVerify())
+                .setParams(params)
+                .build();
 ```
 
 ## 2. 配置Code校验类与HttpResult 
@@ -343,7 +347,7 @@ gradle  ：
 ## 3. 发起网络请求
 
 ```
-        HttpManager.getInstance().toSubscribe(HttpManager.getInstance().getApiService(IInsApi.class).list("ANDROID"), App.instalce, new SimpleHttpCallback<List<InsuranceVo>>() {
+        httpManager.toSubscribe(httpManager.getApiService(IInsApi.class).list("ANDROID"), App.instalce, new SimpleHttpCallback<List<InsuranceVo>>() {
             @Override
             public void onNext(List<InsuranceVo> insuranceVos) {
                 tvContent.setText("Datas = \n" + insuranceVos.toString());
