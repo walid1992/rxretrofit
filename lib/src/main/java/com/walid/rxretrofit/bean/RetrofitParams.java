@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
+import okhttp3.Dns;
 import okhttp3.Interceptor;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
@@ -25,6 +26,7 @@ public class RetrofitParams {
     private SSLSocketFactory sslSocketFactory;
     private HostnameVerifier hostnameVerifier;
     private boolean debug;
+    private Dns dns;
 
     public RetrofitParams() {
     }
@@ -95,8 +97,18 @@ public class RetrofitParams {
         return hostnameVerifier;
     }
 
-    public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
+    public RetrofitParams setHostnameVerifier(HostnameVerifier hostnameVerifier) {
         this.hostnameVerifier = hostnameVerifier;
+        return this;
+    }
+
+    public Dns getDns() {
+        return dns;
+    }
+
+    public RetrofitParams setDns(Dns dns) {
+        this.dns = dns;
+        return this;
     }
 
     public boolean isDebug() {

@@ -19,6 +19,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.Dns;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -38,6 +39,7 @@ public class HttpManager {
     private Retrofit retrofit;
     private ICodeVerify codeVerify;
     private RetrofitParams params;
+    private String baseUrl;
 
     HttpManager(String baseUrl, ICodeVerify codeVerify, RetrofitParams params) {
         Converter.Factory converterFactory = params.getConverterFactory();
@@ -49,6 +51,7 @@ public class HttpManager {
                 .build();
         this.codeVerify = codeVerify;
         this.params = params;
+        this.baseUrl = baseUrl;
     }
 
     private OkHttpClient createClient(RetrofitParams params) {
@@ -92,6 +95,11 @@ public class HttpManager {
             builder.hostnameVerifier(params.getHostnameVerifier());
         }
 
+        Dns dns = params.getDns();
+        if (dns != null) {
+            builder.dns(dns);
+        }
+
         return builder.build();
     }
 
@@ -126,6 +134,10 @@ public class HttpManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(tHttpSubscriber);
         return tHttpSubscriber;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
     }
 
     public RetrofitParams getParams() {
