@@ -314,12 +314,12 @@ public class HttpSubscriber<T> implements IHttpCancelListener, Observer<T> {
 gradle  ：
 
 ```
- compile 'com.walid:rxretrofit:0.3.2'
+ compile 'com.walid:rxretrofit:0.3.8'
 ```
 
 # 使用说明
 
-## 1. 注册单例 HttpManager（建议在 Application 中注册）
+## 1. 注册 HttpManager（建议在 Application 中注册）
 
 ```
         ArrayList<Interceptor> interceptors = new ArrayList<>();
