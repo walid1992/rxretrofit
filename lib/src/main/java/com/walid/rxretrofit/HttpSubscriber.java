@@ -97,7 +97,8 @@ public class HttpSubscriber<T> implements IHttpCancelListener, Observer<IHttpRes
         } else if (e instanceof ConnectException) {
             callError(ExceptionCode.CONNECT_EXCEPTION, "连接服务器失败~");
         } else {
-            callError(ExceptionCode.UNKNOWN_ERROR, "服务器正在开小灶,请稍后再试~");
+            callError(ExceptionCode.UNKNOWN_ERROR, e.getMessage());
+//            callError(ExceptionCode.UNKNOWN_ERROR, "服务器正在开小灶,请稍后再试~");
         }
 
         RxRetrogitLog.e(e.getMessage());

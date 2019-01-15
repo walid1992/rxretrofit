@@ -10,6 +10,7 @@ import com.walid.rxretrofit.interfaces.IHttpCallback;
 import com.walid.rxretrofit.interfaces.IHttpResult;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
@@ -22,6 +23,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.Dns;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
@@ -57,6 +59,9 @@ public class HttpManager {
     private OkHttpClient createClient(RetrofitParams params) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
+        // 设置协议
+        builder.protocols(Collections.singletonList(Protocol.HTTP_1_1));
+
         // 设置超时
         int connectTimeoutSeconds = params.getConnectTimeoutSeconds();
         if (connectTimeoutSeconds > 0) {
@@ -87,7 +92,11 @@ public class HttpManager {
 
         SSLSocketFactory sslSocketFactory = params.getSslSocketFactory();
         if (sslSocketFactory != null) {
-            builder.sslSocketFactory(params.getSslSocketFactory());
+            if (params.getX509TrustManager() != null) {
+                builder.sslSocketFactory(params.getSslSocketFactory(), params.getX509TrustManager());
+            } else {
+                builder.sslSocketFactory(params.getSslSocketFactory());
+            }
         }
 
         HostnameVerifier hostnameVerifier = params.getHostnameVerifier();

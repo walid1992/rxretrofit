@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Dns;
 import okhttp3.Interceptor;
@@ -24,6 +25,7 @@ public class RetrofitParams {
     private Converter.Factory converterFactory;
     private CallAdapter.Factory callAdapterFactor;
     private SSLSocketFactory sslSocketFactory;
+    private X509TrustManager x509TrustManager;
     private HostnameVerifier hostnameVerifier;
     private boolean debug;
     private Dns dns;
@@ -89,8 +91,19 @@ public class RetrofitParams {
         return sslSocketFactory;
     }
 
-    public void setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
+    public X509TrustManager getX509TrustManager() {
+        return x509TrustManager;
+    }
+
+    public RetrofitParams sslSocketFactory(SSLSocketFactory sslSocketFactory) {
         this.sslSocketFactory = sslSocketFactory;
+        return this;
+    }
+
+    public RetrofitParams sslSocketFactory(SSLSocketFactory sslSocketFactory, X509TrustManager x509TrustManager) {
+        this.sslSocketFactory = sslSocketFactory;
+        this.x509TrustManager = x509TrustManager;
+        return this;
     }
 
     public HostnameVerifier getHostnameVerifier() {

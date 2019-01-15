@@ -26,6 +26,12 @@ public class MainActivity extends AppCompatActivity {
             public void onNext(List<InsuranceVo> insuranceVos) {
                 tvContent.setText("Datas = \n" + insuranceVos.toString());
             }
+
+            @Override
+            public void onError(int code, String message) {
+                super.onError(code, message);
+                tvContent.setText("Datas = \n" + message);
+            }
         }, false);
 
 //        InsService.list(new SimpleHttpCallback<List<InsuranceVo>>() {
