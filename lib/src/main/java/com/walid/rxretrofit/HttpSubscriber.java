@@ -18,8 +18,7 @@ import org.json.JSONException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 import retrofit2.HttpException;
 
 /**
@@ -27,7 +26,7 @@ import retrofit2.HttpException;
  * Data     : 2016-08-18  15:59
  * Describe : http 观察者(订阅者)
  */
-public class HttpSubscriber<T> implements IHttpCancelListener, Observer<IHttpResult<T>> {
+public class HttpSubscriber<T> extends DisposableObserver<IHttpResult<T>> implements IHttpCancelListener {
 
     private static final String TAG = "HttpSubscriber";
 
@@ -55,10 +54,22 @@ public class HttpSubscriber<T> implements IHttpCancelListener, Observer<IHttpRes
         this.showError = showError;
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
+    }
+
+    @Override
+    public void onCancel() {
+        if (!isDisposed()) dispose();
+        Log.d(TAG, "onCancel");
+    }
+
     // 对错误进行统一处理
     @Override
     public void onError(Throwable e) {
-
+        Log.d(TAG, "onError");
         Throwable throwable = e;
         //获取最根源的异常
         while (throwable.getCause() != null) {
@@ -100,23 +111,13 @@ public class HttpSubscriber<T> implements IHttpCancelListener, Observer<IHttpRes
             callError(ExceptionCode.UNKNOWN_ERROR, e.getMessage());
 //            callError(ExceptionCode.UNKNOWN_ERROR, "服务器正在开小灶,请稍后再试~");
         }
-
+        if (!isDisposed()) dispose();
         RxRetrogitLog.e(e.getMessage());
-
-    }
-
-    @Override
-    public void onSubscribe(Disposable d) {
-        Log.d(TAG, "onSubscribe");
-    }
-
-    @Override
-    public void onCancel() {
-        Log.d(TAG, "onCancel");
     }
 
     @Override
     public void onComplete() {
+        if (!isDisposed()) dispose();
         Log.d(TAG, "onCompleted");
     }
 

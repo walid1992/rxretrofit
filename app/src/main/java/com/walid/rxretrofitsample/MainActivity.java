@@ -2,6 +2,7 @@ package com.walid.rxretrofitsample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 
 import com.walid.rxretrofit.interfaces.SimpleHttpCallback;
@@ -21,19 +22,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tvContent = (TextView) findViewById(R.id.tv_content);
 
-        App.httpManager.toSubscribe(App.httpManager.getApiService(IInsApi.class).list("ANDROID"), App.instance, new SimpleHttpCallback<List<InsuranceVo>>() {
+        tvContent.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onNext(List<InsuranceVo> insuranceVos) {
-                tvContent.setText("Datas = \n" + insuranceVos.toString());
-            }
+            public void onClick(View v) {
+                App.httpManager.toSubscribe(App.httpManager.getApiService(IInsApi.class).list("ANDROID"), App.instance, new SimpleHttpCallback<List<InsuranceVo>>() {
+                    @Override
+                    public void onNext(List<InsuranceVo> insuranceVos) {
+                        tvContent.setText("Datas = \n" + insuranceVos.toString());
+                    }
 
-            @Override
-            public void onError(int code, String message) {
-                super.onError(code, message);
-                tvContent.setText("Datas = \n" + message);
+                    @Override
+                    public void onError(int code, String message) {
+                        super.onError(code, message);
+                        tvContent.setText("Datas = \n" + message);
+                    }
+                }, false);
             }
-        }, false);
-
+        });
 //        InsService.list(new SimpleHttpCallback<List<InsuranceVo>>() {
 //            @Override
 //            public void onNext(List<InsuranceVo> insuranceVos) {

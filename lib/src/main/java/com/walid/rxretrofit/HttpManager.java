@@ -62,6 +62,9 @@ public class HttpManager {
         // 设置协议
         builder.protocols(Collections.singletonList(Protocol.HTTP_1_1));
 
+        // 设置连接池数量
+//        builder.connectionPool(new ConnectionPool(10, 10, TimeUnit.MINUTES));
+
         // 设置超时
         int connectTimeoutSeconds = params.getConnectTimeoutSeconds();
         if (connectTimeoutSeconds > 0) {
