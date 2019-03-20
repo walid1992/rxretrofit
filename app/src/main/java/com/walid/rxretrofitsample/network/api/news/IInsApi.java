@@ -19,7 +19,7 @@ import retrofit2.http.Query;
 public interface IInsApi {
 
     // news
-    @GET("/api/ins/list")
+    @GET("/api")
     Observable<HttpResult<List<InsuranceVo>>> list(@Query("platform") String platform);
 
 }

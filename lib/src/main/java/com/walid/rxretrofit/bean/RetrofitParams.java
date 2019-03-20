@@ -22,6 +22,7 @@ public class RetrofitParams {
     private int readTimeoutSeconds;
     private int writeTimeoutSeconds;
     private ArrayList<Interceptor> interceptors;
+    private ArrayList<Interceptor> networkInterceptors;
     private Converter.Factory converterFactory;
     private CallAdapter.Factory callAdapterFactor;
     private SSLSocketFactory sslSocketFactory;
@@ -75,6 +76,15 @@ public class RetrofitParams {
 
     public RetrofitParams setConverterFactory(Converter.Factory converterFactory) {
         this.converterFactory = converterFactory;
+        return this;
+    }
+
+    public ArrayList<Interceptor> getNetworkInterceptors() {
+        return networkInterceptors;
+    }
+
+    public RetrofitParams setNetworkInterceptors(ArrayList<Interceptor> networkInterceptors) {
+        this.networkInterceptors = networkInterceptors;
         return this;
     }
 

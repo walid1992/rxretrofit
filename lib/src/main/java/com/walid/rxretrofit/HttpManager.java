@@ -86,6 +86,13 @@ public class HttpManager {
             builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
         }
 
+        ArrayList<Interceptor> networkInterceptors = params.getNetworkInterceptors();
+        if (networkInterceptors != null && networkInterceptors.size() > 0) {
+            for (Interceptor interceptor : networkInterceptors) {
+                builder.addNetworkInterceptor(interceptor);
+            }
+        }
+
         ArrayList<Interceptor> interceptors = params.getInterceptors();
         if (interceptors != null && interceptors.size() > 0) {
             for (Interceptor interceptor : interceptors) {
