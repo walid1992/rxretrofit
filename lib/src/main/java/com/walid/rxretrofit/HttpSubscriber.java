@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.JsonParseException;
+import com.google.gson.stream.MalformedJsonException;
 import com.walid.rxretrofit.exception.ExceptionCode;
 import com.walid.rxretrofit.exception.ServerResultException;
 import com.walid.rxretrofit.interfaces.IHttpCallback;
@@ -17,6 +18,7 @@ import org.json.JSONException;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 import io.reactivex.observers.DisposableObserver;
 import retrofit2.HttpException;
@@ -97,7 +99,7 @@ public class HttpSubscriber<T> extends DisposableObserver<IHttpResult<T>> implem
                     callError(ExceptionCode.HTTP_EXCEPTION, "网络错误,请检查网络后再试~");
                     break;
             }
-        } else if (e instanceof JsonParseException || e instanceof JSONException || e instanceof ParseException) {
+        } else if (e instanceof JsonParseException || e instanceof JSONException || e instanceof ParseException || e instanceof MalformedJsonException) {
             //均视为解析错误
             callError(ExceptionCode.PARSE_ERROR, "数据解析异常~");
         } else if (e instanceof SocketTimeoutException) {
@@ -105,7 +107,7 @@ public class HttpSubscriber<T> extends DisposableObserver<IHttpResult<T>> implem
         } else if (e instanceof ServerResultException) {
             ServerResultException apiException = (ServerResultException) e;
             callError(apiException.getCode(), apiException.getMessage());
-        } else if (e instanceof ConnectException) {
+        } else if (e instanceof ConnectException || e instanceof UnknownHostException) {
             callError(ExceptionCode.CONNECT_EXCEPTION, "连接服务器失败~");
         } else {
             callError(ExceptionCode.UNKNOWN_ERROR, e.getMessage());

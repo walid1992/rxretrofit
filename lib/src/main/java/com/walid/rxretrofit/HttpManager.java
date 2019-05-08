@@ -29,7 +29,6 @@ import retrofit2.CallAdapter;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Author   : walid
@@ -46,8 +45,10 @@ public class HttpManager {
     HttpManager(String baseUrl, ICodeVerify codeVerify, RetrofitParams params) {
         Converter.Factory converterFactory = params.getConverterFactory();
         CallAdapter.Factory callAdapterFactory = params.getCallAdapterFactor();
+        // TODO 修复 Use JsonReader.setLenient(true) to accept malformed JSON at line 1column 1 path $ 异常
         retrofit = new Retrofit.Builder().baseUrl(baseUrl)
-                .addConverterFactory(converterFactory != null ? converterFactory : GsonConverterFactory.create(new GsonBuilder().create()))
+                .addConverterFactory(converterFactory != null ? converterFactory : LenientGsonConverterFactory.create(new GsonBuilder().create()))
+//                .addConverterFactory(converterFactory != null ? converterFactory : GsonConverterFactory.create(new GsonBuilder().create()))
                 .addCallAdapterFactory(callAdapterFactory != null ? callAdapterFactory : RxJava2CallAdapterFactory.create())
                 .client(createClient(params))
                 .build();
