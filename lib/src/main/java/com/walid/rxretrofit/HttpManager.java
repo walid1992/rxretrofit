@@ -4,10 +4,9 @@ import android.content.Context;
 
 import com.google.gson.GsonBuilder;
 import com.walid.rxretrofit.bean.RetrofitParams;
-import com.walid.rxretrofit.exception.ServerResultException;
-import com.walid.rxretrofit.interfaces.ICodeVerify;
 import com.walid.rxretrofit.interfaces.IHttpCallback;
 import com.walid.rxretrofit.interfaces.IHttpResult;
+import com.walid.rxretrofit.obserable.DataCheckFunction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +17,6 @@ import javax.net.ssl.SSLSocketFactory;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Dns;
 import okhttp3.Interceptor;
@@ -38,11 +36,10 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 public class HttpManager {
 
     private Retrofit retrofit;
-    private ICodeVerify codeVerify;
     private RetrofitParams params;
     private String baseUrl;
 
-    HttpManager(String baseUrl, ICodeVerify codeVerify, RetrofitParams params) {
+    HttpManager(String baseUrl, RetrofitParams params) {
         Converter.Factory converterFactory = params.getConverterFactory();
         CallAdapter.Factory callAdapterFactory = params.getCallAdapterFactor();
         // TODO 修复 Use JsonReader.setLenient(true) to accept malformed JSON at line 1column 1 path $ 异常
@@ -52,7 +49,6 @@ public class HttpManager {
                 .addCallAdapterFactory(callAdapterFactory != null ? callAdapterFactory : RxJava2CallAdapterFactory.create())
                 .client(createClient(params))
                 .build();
-        this.codeVerify = codeVerify;
         this.params = params;
         this.baseUrl = baseUrl;
     }
@@ -127,29 +123,38 @@ public class HttpManager {
         return retrofit.create(type);
     }
 
-    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, Context context, IHttpCallback<T> listener) {
-        return toSubscribe(observable, new HttpSubscriber<>(context, listener));
-    }
-
-    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, Context context, IHttpCallback<T> listener, boolean isShowToast) {
-        return toSubscribe(observable, new HttpSubscriber<>(context, listener, isShowToast));
-    }
-
-    private <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, HttpSubscriber<T> tHttpSubscriber) {
-        Observable<IHttpResult<T>> observableNew = observable.map(new Function<Result, IHttpResult<T>>() {
+    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, Context context, final IHttpCallback<T> listener) {
+        return toSubscribe(observable, new HttpSubscriber<T>(context) {
             @Override
-            public IHttpResult<T> apply(Result result) throws Exception {
-                if (result == null) {
-                    throw new IllegalStateException("数据为空~");
-                }
-                int code = result.getCode();
-                if (!codeVerify.checkValid(result.getCode())) {
-                    throw new ServerResultException(code, codeVerify.formatCodeMessage(code, result.getMsg()));
-                }
-                return result;
+            public void success(T t) {
+                listener.onNext(t);
+            }
+
+            @Override
+            public void error(int code, String message) {
+                listener.onError(code, message);
             }
         });
-        observableNew.subscribeOn(Schedulers.io())
+    }
+
+    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, Context context, final IHttpCallback<T> listener, boolean isShowToast) {
+        return toSubscribe(observable, new HttpSubscriber<T>(context) {
+            @Override
+            public void success(T t) {
+                listener.onNext(t);
+            }
+
+            @Override
+            public void error(int code, String message) {
+                listener.onError(code, message);
+            }
+        });
+    }
+
+    private <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(final Observable<Result> observable, HttpSubscriber<T> tHttpSubscriber) {
+        observable
+                .map(new DataCheckFunction<>())
+                .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(tHttpSubscriber);

@@ -194,11 +194,11 @@ rxretrofit库的初始化，建议在Application中进行初始化，通过参�
  * Data     : 2016-08-18  15:59
  * Describe : http 观察者(订阅者)
  */
-public class HttpSubscriber<T> implements IHttpCancelListener, Observer<T> {
+public abstract class HttpSubscriber<T> extends DisposableObserver<IHttpResult<T>> implements IHttpCancelListener {
 
     private static final String TAG = "HttpSubscriber";
 
-    //对应HTTP的状态码
+    // 对应HTTP的状态码
     private static final int UNAUTHORIZED = 401;
     private static final int FORBIDDEN = 403;
     private static final int NOT_FOUND = 404;
@@ -208,24 +208,61 @@ public class HttpSubscriber<T> implements IHttpCancelListener, Observer<T> {
     private static final int SERVICE_UNAVAILABLE = 503;
     private static final int GATEWAY_TIMEOUT = 504;
 
-    private Context context;
-    private IHttpCallback<T> httpCallback;
-    private boolean showError;
+    public static <T> HttpSubscriber<T> create(IHttpCallback<T> iHttpCallback) {
+        return new HttpSubscriber<T>() {
+            @Override
+            public void success(T t) {
+                iHttpCallback.onNext(t);
+            }
 
-    public HttpSubscriber(Context context, IHttpCallback<T> httpCallback) {
-        this(context, httpCallback, true);
+            @Override
+            public void error(int code, String message) {
+                iHttpCallback.onError(code, message);
+            }
+        };
     }
 
-    public HttpSubscriber(Context context, IHttpCallback<T> httpCallback, boolean showError) {
+    public static <T> HttpSubscriber<T> createWithToast(Context context, IHttpCallback<T> iHttpCallback) {
+        return new HttpSubscriber<T>(context) {
+            @Override
+            public void success(T t) {
+                iHttpCallback.onNext(t);
+            }
+
+            @Override
+            public void error(int code, String message) {
+                iHttpCallback.onError(code, message);
+            }
+        };
+    }
+
+    private Context context;
+    private boolean showToast;
+
+    public HttpSubscriber() {
+    }
+
+    public HttpSubscriber(Context context) {
         this.context = context;
-        this.httpCallback = httpCallback;
-        this.showError = showError;
+        this.showToast = true;
+    }
+
+    @Override
+    protected final void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
+    }
+
+    @Override
+    public final void onCancel() {
+        if (!isDisposed()) dispose();
+        Log.d(TAG, "onCancel");
     }
 
     // 对错误进行统一处理
     @Override
-    public void onError(Throwable e) {
-
+    public final void onError(Throwable e) {
+        Log.d(TAG, "onError");
         Throwable throwable = e;
         //获取最根源的异常
         while (throwable.getCause() != null) {
@@ -253,7 +290,7 @@ public class HttpSubscriber<T> implements IHttpCancelListener, Observer<T> {
                     callError(ExceptionCode.HTTP_EXCEPTION, "网络错误,请检查网络后再试~");
                     break;
             }
-        } else if (e instanceof JsonParseException || e instanceof JSONException || e instanceof ParseException) {
+        } else if (e instanceof JsonParseException || e instanceof JSONException || e instanceof ParseException || e instanceof MalformedJsonException) {
             //均视为解析错误
             callError(ExceptionCode.PARSE_ERROR, "数据解析异常~");
         } else if (e instanceof SocketTimeoutException) {
@@ -261,48 +298,38 @@ public class HttpSubscriber<T> implements IHttpCancelListener, Observer<T> {
         } else if (e instanceof ServerResultException) {
             ServerResultException apiException = (ServerResultException) e;
             callError(apiException.getCode(), apiException.getMessage());
-        } else if (e instanceof ConnectException) {
+        } else if (e instanceof ConnectException || e instanceof UnknownHostException) {
             callError(ExceptionCode.CONNECT_EXCEPTION, "连接服务器失败~");
         } else {
-            callError(ExceptionCode.UNKNOWN_ERROR, "服务器正在开小灶,请稍后再试~");
+            callError(ExceptionCode.UNKNOWN_ERROR, e.getMessage());
+//            callError(ExceptionCode.UNKNOWN_ERROR, "服务器正在开小灶,请稍后再试~");
         }
-
+        if (!isDisposed()) dispose();
         RxRetrogitLog.e(e.getMessage());
-
     }
 
     @Override
-    public void onSubscribe(Disposable d) {
-        Log.d(TAG, "onSubscribe");
-    }
-
-    @Override
-    public void onCancel() {
-        Log.d(TAG, "onCancel");
-    }
-
-    @Override
-    public void onComplete() {
+    public final void onComplete() {
+        if (!isDisposed()) dispose();
         Log.d(TAG, "onCompleted");
     }
 
     private void callError(int code, String message) {
-        if (showError) {
+        if (showToast && context != null) {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         }
-        if (httpCallback != null) {
-            httpCallback.onError(code, message);
-        }
+        error(code, message);
     }
 
     // 将onNext方法中的返回结果交给Activity或Fragment自己处理
     @Override
-    public void onNext(T t) {
-        if (httpCallback == null) {
-            return;
-        }
-        httpCallback.onNext(t);
+    public final void onNext(IHttpResult<T> tiHttpResult) {
+        success(tiHttpResult.getData());
     }
+
+    public abstract void success(T t);
+
+    public abstract void error(int code, String message);
 
 }
 ```
@@ -335,7 +362,6 @@ gradle  ：
         params.setDebug(true);
         httpManager = HttpManagerBuilder.create()
                 .setBaseUrl(ApiConstants.URL)
-                .setCodeVerify(new CodeVerify())
                 .setParams(params)
                 .build();
 ```
@@ -347,15 +373,30 @@ gradle  ：
 ## 3. 发起网络请求
 
 ```
+        写法1：
+
         httpManager.toSubscribe(httpManager.getApiService(IInsApi.class).list("ANDROID"), App.instalce, new SimpleHttpCallback<List<InsuranceVo>>() {
             @Override
             public void onNext(List<InsuranceVo> insuranceVos) {
                 tvContent.setText("Datas = \n" + insuranceVos.toString());
             }
         }, false);
+
+        写法2：
+
+        App.httpManager
+                .getApiService(IInsApi.class).list("Android")
+                .compose(RxSchedulers.observableToMain())
+                .map(RxSchedulers.dataCheckFunction())
+                .subscribe(HttpSubscriber.create(new SimpleHttpCallback<List<InsuranceVo>>() {
+                    @Override
+                    public void onNext(List<InsuranceVo> insuranceVos) {
+
+                    }
+                }));
 ```
 
 # 结语
 
-RxRetrofit的使用就简单介绍到这里，希望大家多多提意见，草民好加以完善，谢谢~
+RxRetrofit的使用就简单介绍到这里，希望大家多多提意见，谢谢~
 

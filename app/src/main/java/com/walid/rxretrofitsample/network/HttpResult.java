@@ -40,6 +40,11 @@ public class HttpResult<T> implements IHttpResult<T> {
         return data;
     }
 
+    @Override
+    public boolean success() {
+        return code == 0;
+    }
+
     public void setData(T data) {
         this.data = data;
     }

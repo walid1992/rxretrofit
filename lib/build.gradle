@@ -7,16 +7,16 @@ android {
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
-    }
+//    lintOptions {
+//        checkReleaseBuilds false
+//        abortOnError false
+//    }
 
     buildTypes {
         release {
@@ -24,11 +24,14 @@ android {
             proguardFiles 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     // rxjava
     api 'io.reactivex.rxjava2:rxjava:2.2.7'
     api 'io.reactivex.rxjava2:rxandroid:2.1.1'
@@ -37,6 +40,7 @@ dependencies {
     api 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     api 'com.squareup.retrofit2:converter-gson:2.2.0'
     api 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
+    api 'com.android.support:appcompat-v7:28.0.0'
 }
 
 //添加
@@ -44,7 +48,7 @@ publish {
     userOrg = 'walid1992'//bintray.com用户名
     groupId = 'com.walid'//jcenter上的路径
     artifactId = 'rxretrofit'//项目名称
-    publishVersion = '0.3.20'//版本号
+    publishVersion = '0.9.0'//版本号
     desc = ' rxjava and retrofit utils'//描述
     website = 'https://github.com/walid1992/RxRetrofit'//网站
 }

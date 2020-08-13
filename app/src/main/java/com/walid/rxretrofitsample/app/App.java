@@ -7,7 +7,6 @@ import com.walid.rxretrofit.HttpManager;
 import com.walid.rxretrofit.HttpManagerBuilder;
 import com.walid.rxretrofit.bean.RetrofitParams;
 import com.walid.rxretrofitsample.network.ApiConstants;
-import com.walid.rxretrofitsample.network.CodeVerify;
 import com.walid.rxretrofitsample.network.interceptor.ParamsInterceptor;
 
 import java.util.ArrayList;
@@ -42,7 +41,6 @@ public class App extends Application {
         params.setDebug(true);
         httpManager = HttpManagerBuilder.create()
                 .setBaseUrl(ApiConstants.URL)
-                .setCodeVerify(new CodeVerify())
                 .setParams(params)
                 .build();
     }

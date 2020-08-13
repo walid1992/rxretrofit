@@ -10,7 +10,6 @@ import com.walid.rxretrofit.interfaces.ICodeVerify;
  */
 public class HttpManagerBuilder {
 
-    private ICodeVerify codeVerify;
     private RetrofitParams params;
     private String baseUrl;
 
@@ -26,18 +25,13 @@ public class HttpManagerBuilder {
         return this;
     }
 
-    public HttpManagerBuilder setCodeVerify(ICodeVerify codeVerify) {
-        this.codeVerify = codeVerify;
-        return this;
-    }
-
     public HttpManagerBuilder setParams(RetrofitParams params) {
         this.params = params;
         return this;
     }
 
     public HttpManager build() {
-        return new HttpManager(baseUrl, codeVerify, params);
+        return new HttpManager(baseUrl, params);
     }
 
 }

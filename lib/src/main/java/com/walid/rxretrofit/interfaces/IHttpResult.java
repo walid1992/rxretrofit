@@ -13,5 +13,7 @@ public interface IHttpResult<T> {
 
     T getData();
 
+    boolean success();
+
 }
 

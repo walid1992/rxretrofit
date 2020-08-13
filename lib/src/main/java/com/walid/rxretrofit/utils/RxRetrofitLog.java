@@ -1,5 +1,6 @@
 package com.walid.rxretrofit.utils;
 
+
 import android.util.Log;
 
 /**
@@ -7,7 +8,7 @@ import android.util.Log;
  * Data     : 2016-10-21  12:45
  * Describe :
  */
-public class RxRetrogitLog {
+public class RxRetrofitLog {
 
     private static final String TAG = "rxretrofit";
     public static boolean DEBUG;
