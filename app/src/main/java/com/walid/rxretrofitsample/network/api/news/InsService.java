@@ -15,7 +15,7 @@ import java.util.List;
 
 public class InsService {
 
-    private static final IInsApi INS_API = App.httpManager.getApiService(IInsApi.class);
+    private static final IInsApi INS_API = App.httpManager.service(IInsApi.class);
 
     public static void list(final IHttpCallback<List<InsuranceVo>> listener) {
         ApiUtils.toSubscribe(INS_API.list("ANDROID"), listener);

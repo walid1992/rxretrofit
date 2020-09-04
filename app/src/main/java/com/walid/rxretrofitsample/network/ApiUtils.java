@@ -14,11 +14,11 @@ import io.reactivex.Observable;
 public class ApiUtils {
 
     public static <T> HttpSubscriber<T> toSubscribe(Observable<HttpResult<T>> observable, final IHttpCallback<T> listener) {
-        return toSubscribe(observable, listener, true);
+        return App.httpManager.subscribe(observable, listener);
     }
 
-    public static <T> HttpSubscriber<T> toSubscribe(Observable<HttpResult<T>> observable, final IHttpCallback<T> listener, boolean showToast) {
-        return App.httpManager.toSubscribe(observable, App.instance, listener, showToast);
+    public static <T> HttpSubscriber<T> toSubscribeWithToast(Observable<HttpResult<T>> observable, final IHttpCallback<T> listener) {
+        return App.httpManager.toSubscribeWithToast(observable, listener, App.instance);
     }
 
 }

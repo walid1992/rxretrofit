@@ -83,32 +83,31 @@ dependencies {
 public class HttpManager {
 
     private Retrofit retrofit;
-    private ICodeVerify codeVerify;
+    private RetrofitParams params;
+    private String baseUrl;
 
-    private HttpManager() {
-    }
-
-    public static HttpManager getInstance() {
-        return HttpManager.SingletonHolder.instance;
-    }
-
-    private static class SingletonHolder {
-        static HttpManager instance = new HttpManager();
-    }
-
-    public void create(String baseUrl, ICodeVerify codeVerify, RetrofitParams params) {
-        this.codeVerify = codeVerify;
+    HttpManager(String baseUrl, RetrofitParams params) {
         Converter.Factory converterFactory = params.getConverterFactory();
         CallAdapter.Factory callAdapterFactory = params.getCallAdapterFactor();
+        // TODO 修复 Use JsonReader.setLenient(true) to accept malformed JSON at line 1column 1 path $ 异常
         retrofit = new Retrofit.Builder().baseUrl(baseUrl)
-                .addConverterFactory(converterFactory != null ? converterFactory : GsonConverterFactory.create(new GsonBuilder().create()))
+                .addConverterFactory(converterFactory != null ? converterFactory : LenientGsonConverterFactory.create(new GsonBuilder().create()))
+//                .addConverterFactory(converterFactory != null ? converterFactory : GsonConverterFactory.create(new GsonBuilder().create()))
                 .addCallAdapterFactory(callAdapterFactory != null ? callAdapterFactory : RxJava2CallAdapterFactory.create())
                 .client(createClient(params))
                 .build();
+        this.params = params;
+        this.baseUrl = baseUrl;
     }
 
     private OkHttpClient createClient(RetrofitParams params) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+        // 设置协议
+        builder.protocols(Collections.singletonList(Protocol.HTTP_1_1));
+
+        // 设置连接池数量
+//        builder.connectionPool(new ConnectionPool(10, 10, TimeUnit.MINUTES));
 
         // 设置超时
         int connectTimeoutSeconds = params.getConnectTimeoutSeconds();
@@ -127,7 +126,16 @@ public class HttpManager {
         }
 
         // Log信息拦截器
-        builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+        if (params.isDebug()) {
+            builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+        }
+
+        ArrayList<Interceptor> networkInterceptors = params.getNetworkInterceptors();
+        if (networkInterceptors != null && networkInterceptors.size() > 0) {
+            for (Interceptor interceptor : networkInterceptors) {
+                builder.addNetworkInterceptor(interceptor);
+            }
+        }
 
         ArrayList<Interceptor> interceptors = params.getInterceptors();
         if (interceptors != null && interceptors.size() > 0) {
@@ -135,46 +143,59 @@ public class HttpManager {
                 builder.addInterceptor(interceptor);
             }
         }
+
+        SSLSocketFactory sslSocketFactory = params.getSslSocketFactory();
+        if (sslSocketFactory != null) {
+            if (params.getX509TrustManager() != null) {
+                builder.sslSocketFactory(params.getSslSocketFactory(), params.getX509TrustManager());
+            } else {
+                builder.sslSocketFactory(params.getSslSocketFactory());
+            }
+        }
+
+        HostnameVerifier hostnameVerifier = params.getHostnameVerifier();
+        if (hostnameVerifier != null) {
+            builder.hostnameVerifier(params.getHostnameVerifier());
+        }
+
+        Dns dns = params.getDns();
+        if (dns != null) {
+            builder.dns(dns);
+        }
+
         return builder.build();
     }
 
-    public <ApiType> ApiType getApiService(Class<ApiType> type) {
+    public <ApiType> ApiType service(Class<ApiType> type) {
         return retrofit.create(type);
     }
 
-    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, Context context, IHttpCallback<T> listener) {
-        return toSubscribe(observable, new HttpSubscriber<>(context, listener));
+    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> subscribe(Observable<Result> observable, final IHttpCallback<T> listener) {
+        return subscribe(observable, HttpSubscriber.create(listener));
     }
 
-    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, Context context, IHttpCallback<T> listener, boolean isShowToast) {
-        return toSubscribe(observable, new HttpSubscriber<>(context, listener, isShowToast));
+    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribeWithToast(Observable<Result> observable, final IHttpCallback<T> listener, Context context) {
+        return subscribe(observable, HttpSubscriber.createWithToast(context, listener));
     }
 
-    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, HttpSubscriber<T> httpSubscriber) {
-        Observable<T> observableNew = observable.map(new Function<Result, T>() {
-            @Override
-            public T apply(Result result) throws Exception {
-                if (result == null) {
-                    throw new IllegalStateException("数据为空~");
-                }
-                RxRetrogitLog.d(result.toString());
-                int code = result.getCode();
-                if (!codeVerify.checkValid(result.getCode())) {
-                    throw new ServerResultException(code, codeVerify.formatCodeMessage(code, result.getMsg()));
-                }
-                return result.getData();
-            }
-        });
-        observableNew.subscribeOn(Schedulers.io())
+    private <T, Result extends IHttpResult<T>> HttpSubscriber<T> subscribe(final Observable<Result> observable, HttpSubscriber<T> tHttpSubscriber) {
+        observable
+                .map(new DataCheckFunction<>())
+                .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(httpSubscriber);
-        return httpSubscriber;
+                .subscribe(tHttpSubscriber);
+        return tHttpSubscriber;
     }
 
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public RetrofitParams getParams() {
+        return params;
+    }
 }
-
-
 ```
 
 重要处理：
@@ -375,7 +396,7 @@ gradle  ：
 ```
         写法1：
 
-        httpManager.toSubscribe(httpManager.getApiService(IInsApi.class).list("ANDROID"), App.instalce, new SimpleHttpCallback<List<InsuranceVo>>() {
+        httpManager.subscribe(httpManager.service(IInsApi.class).list("ANDROID"), App.instalce, new SimpleHttpCallback<List<InsuranceVo>>() {
             @Override
             public void onNext(List<InsuranceVo> insuranceVos) {
                 tvContent.setText("Datas = \n" + insuranceVos.toString());
@@ -385,7 +406,7 @@ gradle  ：
         写法2：
 
         App.httpManager
-                .getApiService(IInsApi.class).list("Android")
+                .service(IInsApi.class).list("Android")
                 .compose(RxSchedulers.observableToMain())
                 .map(RxSchedulers.dataCheckFunction())
                 .subscribe(HttpSubscriber.create(new SimpleHttpCallback<List<InsuranceVo>>() {

@@ -119,39 +119,19 @@ public class HttpManager {
         return builder.build();
     }
 
-    public <ApiType> ApiType getApiService(Class<ApiType> type) {
+    public <ApiType> ApiType service(Class<ApiType> type) {
         return retrofit.create(type);
     }
 
-    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, Context context, final IHttpCallback<T> listener) {
-        return toSubscribe(observable, new HttpSubscriber<T>(context) {
-            @Override
-            public void success(T t) {
-                listener.onNext(t);
-            }
-
-            @Override
-            public void error(int code, String message) {
-                listener.onError(code, message);
-            }
-        });
+    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> subscribe(Observable<Result> observable, final IHttpCallback<T> listener) {
+        return subscribe(observable, HttpSubscriber.create(listener));
     }
 
-    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(Observable<Result> observable, Context context, final IHttpCallback<T> listener, boolean isShowToast) {
-        return toSubscribe(observable, new HttpSubscriber<T>(context) {
-            @Override
-            public void success(T t) {
-                listener.onNext(t);
-            }
-
-            @Override
-            public void error(int code, String message) {
-                listener.onError(code, message);
-            }
-        });
+    public <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribeWithToast(Observable<Result> observable, final IHttpCallback<T> listener, Context context) {
+        return subscribe(observable, HttpSubscriber.createWithToast(context, listener));
     }
 
-    private <T, Result extends IHttpResult<T>> HttpSubscriber<T> toSubscribe(final Observable<Result> observable, HttpSubscriber<T> tHttpSubscriber) {
+    private <T, Result extends IHttpResult<T>> HttpSubscriber<T> subscribe(final Observable<Result> observable, HttpSubscriber<T> tHttpSubscriber) {
         observable
                 .map(new DataCheckFunction<>())
                 .subscribeOn(Schedulers.io())

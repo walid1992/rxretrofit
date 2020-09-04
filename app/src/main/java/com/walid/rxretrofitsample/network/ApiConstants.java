@@ -6,5 +6,5 @@ package com.walid.rxretrofitsample.network;
  * Describe :
  */
 public interface ApiConstants {
-    String URL = "http://www.baidu2345.com/";
+    String URL = "https://www.baidu.com/";
 }

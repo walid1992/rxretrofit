@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         tvContent.setOnClickListener(v -> {
             App.httpManager
-                    .getApiService(IInsApi.class).list("Android")
+                    .service(IInsApi.class).list("Android")
                     .compose(RxSchedulers.observableToMain())
                     .map(RxSchedulers.dataCheckFunction())
                     .subscribe(HttpSubscriber.createWithToast(MainActivity.this, new SimpleHttpCallback<List<InsuranceVo>>() {
@@ -37,18 +37,18 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }));
 
-//                App.httpManager.toSubscribe(App.httpManager.getApiService(IInsApi.class).list("ANDROID"), App.instance, new SimpleHttpCallback<List<InsuranceVo>>() {
-//                    @Override
-//                    public void onNext(List<InsuranceVo> insuranceVos) {
-//                        tvContent.setText("Datas = \n" + insuranceVos.toString());
-//                    }
-//
-//                    @Override
-//                    public void onError(int code, String message) {
-//                        super.onError(code, message);
-//                        tvContent.setText("Datas = \n" + message);
-//                    }
-//                }, false);
+            App.httpManager.subscribe(App.httpManager.service(IInsApi.class).list("ANDROID"), new SimpleHttpCallback<List<InsuranceVo>>() {
+                @Override
+                public void onNext(List<InsuranceVo> insuranceVos) {
+                    tvContent.setText("Datas = \n" + insuranceVos.toString());
+                }
+
+                @Override
+                public void onError(int code, String message) {
+                    super.onError(code, message);
+                    tvContent.setText("Datas = \n" + message);
+                }
+            });
         });
 //        InsService.list(new SimpleHttpCallback<List<InsuranceVo>>() {
 //            @Override
