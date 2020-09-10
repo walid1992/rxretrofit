@@ -7,6 +7,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Dns;
+import okhttp3.EventListener;
 import okhttp3.Interceptor;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
@@ -26,6 +27,7 @@ public class RetrofitParams {
     private Converter.Factory converterFactory;
     private CallAdapter.Factory callAdapterFactor;
     private SSLSocketFactory sslSocketFactory;
+    private EventListener.Factory eventListenerFactory;
     private X509TrustManager x509TrustManager;
     private HostnameVerifier hostnameVerifier;
     private boolean debug;
@@ -132,6 +134,15 @@ public class RetrofitParams {
     public RetrofitParams setDns(Dns dns) {
         this.dns = dns;
         return this;
+    }
+
+    public RetrofitParams eventListenerFactory(EventListener.Factory factory) {
+        this.eventListenerFactory = factory;
+        return this;
+    }
+
+    public EventListener.Factory getEventListenerFactory() {
+        return eventListenerFactory;
     }
 
     public boolean isDebug() {

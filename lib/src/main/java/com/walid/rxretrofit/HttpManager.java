@@ -19,6 +19,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Dns;
+import okhttp3.EventListener;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
@@ -114,6 +115,11 @@ public class HttpManager {
         Dns dns = params.getDns();
         if (dns != null) {
             builder.dns(dns);
+        }
+
+        EventListener.Factory factory = params.getEventListenerFactory();
+        if (factory != null) {
+            builder.eventListenerFactory(factory);
         }
 
         return builder.build();
